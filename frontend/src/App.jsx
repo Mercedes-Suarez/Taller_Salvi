@@ -7,6 +7,7 @@ import Navbar from './components/Navbar';
 import AboutMe from './components/AboutMe';
 import Footer from './components/Footer';
 import Home from './components/Home';
+import Carousel from "./components/Carousel";
 //import Contact from './components/Contact';
 import FormRegister from './components/FormRegister';
 import Login from './components/Login';
@@ -62,6 +63,7 @@ function App() {
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/client/dashboard" element={<ClientDashboard />} />
           <Route path="/navbar" element={<Navbar />}/>
+          <Route path="/carousel" element={<Carousel />} />
           <Route path="/about_me" element={<AboutMe />} />
           <Route path="/services" element={<Services />} />
           <Route path="/footer" element={<Footer />} />
