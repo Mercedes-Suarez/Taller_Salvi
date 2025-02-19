@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;600&display=swap');
+
+
+.custom-ok-button {
+    background-color: #043B4E !important;
+    color: white !important;
+    font-family: 'Raleway', sans-serif;
+  }
+  
+  .custom-title {
+    font-family: 'Raleway', sans-serif;
+  }
+  
+  .custom-content {
+    font-family: 'Raleway', sans-serif;
+  }

@@ -1,16 +1,12 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import react from '@vitejs/plugin-vue';
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5000', // Dirección del backend Flask
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '') // Reemplaza '/api' en las llamadas
-      }
+  resolve: {
+    alias: {
+      '@': '/src',
+      'jwt-decode': '/node_modules/jwt-decode/build/esm/index.js',
     }
-  }
-});
+  } 
+  });
