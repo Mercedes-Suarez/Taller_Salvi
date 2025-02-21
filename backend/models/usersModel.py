@@ -1,5 +1,5 @@
 from backend.app import db
-from backend.models.user_typeModel import UserType
+from backend.models.user_typeModel import UserType 
 
 class Users(db.Model):
     __tablename__ = 'users'
@@ -7,7 +7,7 @@ class Users(db.Model):
     id_user = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
     user_type_id = db.Column(db.Integer, db.ForeignKey('user_type.id_user_type'), nullable=False)
     registration_date = db.Column(db.DateTime, server_default=db.func.now())
 
@@ -18,5 +18,5 @@ class Users(db.Model):
         self.name = name
         self.email = email
         self.password = password
-        self.user_type = user_type_id
+        self.user_type_id = user_type_id
         
