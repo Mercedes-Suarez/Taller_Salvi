@@ -1,3 +1,5 @@
+from backend import db
+
 class Appointment(db.Model):
     __tablename__ = 'appointments'
 

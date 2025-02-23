@@ -1,3 +1,5 @@
+from backend import db
+
 class Message(db.Model):
     __tablename__ = 'messages'
 

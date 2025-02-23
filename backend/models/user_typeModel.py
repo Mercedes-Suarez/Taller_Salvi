@@ -1,4 +1,4 @@
-from backend.app import db
+from backend import db
 
 class UserType(db.Model):
     __tablename__ = 'user_type'

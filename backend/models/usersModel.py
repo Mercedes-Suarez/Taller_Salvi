@@ -1,4 +1,4 @@
-from backend.app import db
+from backend import db
 from backend.models.user_typeModel import UserType 
 
 class Users(db.Model):

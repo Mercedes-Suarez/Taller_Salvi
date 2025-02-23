@@ -1,3 +1,5 @@
+from backend import db
+
 class Advertisement(db.Model):
     __tablename__ = 'advertisements'
 

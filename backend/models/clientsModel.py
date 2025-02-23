@@ -1,4 +1,4 @@
-from backend.app import db
+from backend import db
 from backend.models.usersModel import Users
 
 class Client(db.Model):

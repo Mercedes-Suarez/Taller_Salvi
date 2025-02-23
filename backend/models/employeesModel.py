@@ -1,3 +1,5 @@
+from backend import db
+
 class Employee(db.Model):
     __tablename__ = 'employees'
 

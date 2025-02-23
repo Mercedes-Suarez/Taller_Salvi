@@ -1,3 +1,5 @@
+from backend import db
+
 class Invoice(db.Model):
     __tablename__ = 'invoices'
 

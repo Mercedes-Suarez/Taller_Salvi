@@ -8,6 +8,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 
 def create_app():
+
     app = Flask(__name__)
     app.config.from_object(config['development'])
 
@@ -17,6 +18,6 @@ def create_app():
 
     @app.route("/")
     def home():
-        return {"message": "API Taller Salvi funcionando"}
-
+       return {"message": "API Taller Salvi funcionando"}
+    
     return app

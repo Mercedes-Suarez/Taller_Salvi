@@ -1,4 +1,4 @@
-from backend.app import db
+from backend import db
 from backend.models.clientsModel import Client
 
 class Vehicles(db.Model):

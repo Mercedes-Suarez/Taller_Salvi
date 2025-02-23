@@ -1,4 +1,4 @@
-from backend.app import db
+from backend import db
 
 class Spare_parts_inventory(db.Model):
     __tablename__ = 'spare_parts_inventory'

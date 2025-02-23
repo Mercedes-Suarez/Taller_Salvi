@@ -1,3 +1,5 @@
+from backend import db
+
 class ChatMessage(db.Model):
     __tablename__ = 'chat_messages'
 

@@ -1,3 +1,5 @@
+from backend import db
+
 from backend.models.advertisementsModel import Advertisement
 from backend.models.clientsModel import Client
 from backend.models.employeesModel import Employee
