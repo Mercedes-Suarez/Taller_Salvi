@@ -1,6 +1,6 @@
 from backend import db
 
-class ChatMessage(db.Model):
+class chat_messages(db.Model):
     __tablename__ = 'chat_messages'
 
     id_message = db.Column(db.Integer, primary_key=True, autoincrement=True)
