@@ -4,6 +4,8 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 from backend.config import config
 
+# Importar Blueprints de las rutas
+
 db = SQLAlchemy()
 migrate = Migrate()
 
@@ -15,6 +17,9 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     CORS(app)
+
+    # Registrar Blueprints
+    
 
     @app.route("/")
     def home():
