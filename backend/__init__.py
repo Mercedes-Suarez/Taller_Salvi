@@ -18,6 +18,9 @@ from backend.routes.clientsRoutes import clients_bp
 from backend.routes.vehiclesRoutes import vehicles_bp
 from backend.routes.appoinmentsRouter import appointments_bp
 from backend.routes.repair_ordersRoutes import repair_orders_bp
+from backend.routes.repair_detailsRoutes import repair_details_bp
+from backend.routes.invoicesRoutes import invoices_bp
+from backend.routes.paymentsRoutes import payments_bp
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -45,6 +48,10 @@ def create_app():
     app.register_blueprint(vehicles_bp, url_prefix='/api')
     app.register_blueprint(appointments_bp, url_prefix='/api')
     app.register_blueprint(repair_orders_bp, url_prefix='/api')
+    app.register_blueprint(repair_details_bp, url_prefix='/api')
+    app.register_blueprint(invoices_bp, url_prefix='/api')
+    app.register_blueprint(payments_bp, url_prefix='/api')
+
 
     @app.route("/")
     def home():

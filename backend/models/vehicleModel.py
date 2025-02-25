@@ -1,8 +1,8 @@
 from backend import db
 from backend.models.clientsModel import Client
 
-class Vehicles(db.Model):
-    __tablename__ = 'vehicles'
+class Vehicle(db.Model):
+    __tablename__ = 'vehicle'
 
     id_vehicle = db.Column(db.Integer, primary_key=True, autoincrement=True)
     id_client = db.Column(db.Integer, db.ForeignKey('clients.id_client'), nullable=False)

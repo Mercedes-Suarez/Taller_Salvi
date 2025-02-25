@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from backend import db
-from backend.models.chat_messagesModel import chat_messages
+from backend.models.chat_MessagesModel import chat_messages
 
 # Blueprint para Chat Messages
 chat_messages_bp = Blueprint('chat_messages', __name__)

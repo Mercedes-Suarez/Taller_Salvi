@@ -1,12 +1,12 @@
 from flask import Blueprint, request, jsonify
 from backend import db
-from backend.models.vehiclesModel import Vehicles
+from backend.models.vehicleModel import Vehicle
 
-vehicles_bp = Blueprint('vehicles', __name__)
+vehicles_bp = Blueprint('vehicle', __name__)
 
-@vehicles_bp.route('/vehicles', methods=['GET'])
+@vehicles_bp.route('/api/vehicles', methods=['GET'])
 def get_vehicles():
-    vehicles = Vehicles.query.all()
+    vehicles = Vehicle.query.all()
     return jsonify([{
         "id_vehicle": v.id_vehicle,
         "brand": v.brand,
@@ -14,10 +14,10 @@ def get_vehicles():
         "year": v.year
     } for v in vehicles])
 
-@vehicles_bp.route('/vehicles', methods=['POST'])
+@vehicles_bp.route('/api/vehicles', methods=['POST'])
 def create_vehicle():
     data = request.json
-    new_vehicle = Vehicles(
+    new_vehicle = Vehicle(
         id_client=data['id_client'],
         brand=data['brand'],
         model=data['model'],
@@ -29,9 +29,9 @@ def create_vehicle():
     return jsonify({"message": "Vehicle added"}), 201
 
 # Actualizar un vehículo
-@vehicles_bp.route('/vehicles/<int:id_vehicle>', methods=['PUT'])
+@vehicles_bp.route('/api/vehicles/<int:id_vehicle>', methods=['PUT'])
 def update_vehicle(id_vehicle):
-    vehicle = Vehicles.query.get(id_vehicle)
+    vehicle = Vehicle.query.get(id_vehicle)
     if not vehicle:
         return jsonify({"error": "Vehicle not found"}), 404
 
@@ -46,12 +46,12 @@ def update_vehicle(id_vehicle):
     return jsonify({"message": "Vehicle updated successfully"})
 
 # Eliminar un vehículo
-@vehicles_bp.route('/vehicles/<int:id_vehicle>', methods=['DELETE'])
+@vehicles_bp.route('/api/vehicles/<int:id_vehicle>', methods=['DELETE'])
 def delete_vehicle(id_vehicle):
-    vehicle = Vehicles.query.get(id_vehicle)
+    vehicle = Vehicle.query.get(id_vehicle)
     if not vehicle:
         return jsonify({"error": "Vehicle not found"}), 404
 
     db.session.delete(vehicle)
     db.session.commit()
-    return jsonify({"message": "Vehicle deleted successfully"})
+    return jsonify({"message": "Vehicle deleted successfully"}) 

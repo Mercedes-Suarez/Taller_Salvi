@@ -14,4 +14,4 @@ from backend.models.session_tokensModel import Session_tokens
 from backend.models.spare_parts_inventoryModel import Spare_parts_inventory
 from backend.models.usersModel import Users
 from backend.models.user_typeModel import User_type
-from backend.models.vehiclesModel import Vehicles
+from backend.models.vehicleModel import Vehicle
