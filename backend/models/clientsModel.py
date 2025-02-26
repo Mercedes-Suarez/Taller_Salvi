@@ -1,11 +1,11 @@
 from backend import db
-from backend.models.usersModel import Users
+from models.userModel import User
 
 class Client(db.Model):
     __tablename__ = 'clients'
 
-    id_client = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    id_user = db.Column(db.Integer, db.ForeignKey('users.id_user'), nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(100), nullable=False)

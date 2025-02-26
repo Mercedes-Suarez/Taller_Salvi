@@ -1,5 +1,5 @@
 from backend import db
-from backend.models.usersModel import Users
+from models.userModel import Users
 
 class UserService:
     @staticmethod

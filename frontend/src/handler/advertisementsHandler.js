@@ -1,26 +1,42 @@
 import {
     getAdvertisement,
     createAdvertisement,
-    updateAdvertisements,
-    deleteAdvertisements
+    updateAdvertisement,
+    deleteAdvertisement
 } from "../services/advertisementsService";
 
-export const fetchAdvertisement = async (setAdvertisement) => {
+export const fetchAdvertisements = async (setAdvertisements) => {
     const data = await getAdvertisement();
-    setAdvertisement(data);
+    if (data.error) {
+        console.error("Error fetching advertisements:", data.error);
+        return;  // No actualizar estado si hay error
+    }
+    setAdvertisements(data);
 };
 
-export const addAdvertisement = async (AdvertisementData, setAdvertisement) => {
-    await createAdvertisement(AdvertisementData);
-    fetchAdvertisement(setAdvertisement);
+export const addAdvertisement = async (advertisementData, setAdvertisements) => {
+    const response = await createAdvertisement(advertisementData);
+    if (response.error) {
+        console.error("Error adding advertisement:", response.error);
+        return;  // ❌ Evitar actualizar si hay error
+    }
+    fetchAdvertisements(setAdvertisements);
 };
 
-export const editAdvertisement = async (id, AdvertisementData, setAdvertisement) => {
-    await updateAdvertisements(id, AdvertisementData);
-    fetchAdvertisements(setAdvertisement);
+export const editAdvertisement = async (id, advertisementData, setAdvertisements) => {
+    const response = await updateAdvertisement(id, advertisementData);
+    if (response.error) {
+        console.error("Error updating advertisement:", response.error);
+        return;
+    }
+    fetchAdvertisements(setAdvertisements);
 };
 
-export const removeAdvertisement = async (id, setAdvertisement) => {
-    await deleteAdvertisement(id);
-    fetchAdvertisement(setAdvertisement);
+export const removeAdvertisement = async (id, setAdvertisements) => {
+    const response = await deleteAdvertisement(id);
+    if (response.error) {
+        console.error("Error deleting advertisement:", response.error);
+        return;
+    }
+    fetchAdvertisements(setAdvertisements);
 };
