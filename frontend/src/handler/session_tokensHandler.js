@@ -1,26 +1,41 @@
 import {
-    getsession_tokens,
-    createsession_tokens,
-    updatesession_tokens,
-    deletesession_tokens
-} from "../services/session_tokensHandler";
-
-export const fetchsession_tokens = async (setsession_tokens) => {
-    const data = await getsession_tokens();
-    setsession_tokens(data);
+    getsessionTokens,
+    createsessionTokens,
+    updatesessionTokens,
+    deletesessionTokens
+} from "../services/session_tokensService";
+export const fetchSessionTokens = async (setSessionTokens) => {
+    try {
+        const data = await getSessionTokens();
+        setSessionTokens(data);
+    } catch (error) {
+        console.error("Error fetching session tokens:", error);
+    }
 };
 
-export const addsession_tokens = async (session_tokensData, setsession_tokens) => {
-    await createsession_tokens(session_tokensData);
-    fetchsession_tokens(setsession_tokens);
+export const addSessionToken = async (sessionTokenData, setSessionTokens) => {
+    try {
+        await createSessionToken(sessionTokenData);
+        fetchSessionTokens(setSessionTokens);
+    } catch (error) {
+        console.error("Error adding session token:", error);
+    }
 };
 
-export const editsession_tokens = async (id, session_tokensData, setsession_tokens) => {
-    await updatesession_tokens(id, session_tokensData);
-    fetchsession_tokens(setsession_tokens);
+export const editSessionToken = async (id, sessionTokenData, setSessionTokens) => {
+    try {
+        await updateSessionToken(id, sessionTokenData);
+        fetchSessionTokens(setSessionTokens);
+    } catch (error) {
+        console.error("Error updating session token:", error);
+    }
 };
 
-export const removesession_tokens = async (id, setsession_tokens) => {
-    await deletesession_tokens(id);
-    fetchsession_tokens(setsession_tokens);
+export const removeSessionToken = async (id, setSessionTokens) => {
+    try {
+        await deleteSessionToken(id);
+        fetchSessionTokens(setSessionTokens);
+    } catch (error) {
+        console.error("Error deleting session token:", error);
+    }
 };
