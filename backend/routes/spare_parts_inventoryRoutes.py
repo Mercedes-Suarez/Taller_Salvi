@@ -1,25 +1,27 @@
 from flask import Blueprint, request, jsonify
 from backend import db
-from backend.models.spare_parts_inventoryModel import Spare_parts_inventory
+from backend.models.sparePartsInventoryModel import SparePartsInventory
 
 # Blueprint para Spare Parts Inventory
 spare_parts_bp = Blueprint('spare_parts', __name__)
 
-
 @spare_parts_bp.route('/spare_parts', methods=['GET'])
 def get_spare_parts():
-    spare_parts = Spare_parts_inventory.query.all()
-    return jsonify([{ 
-        "id_part": sp.id_part, 
-        "name": sp.name, 
-        "description": sp.description, 
-        "price": float(sp.price)  # Convertir Decimal a float
-    } for sp in spare_parts])
+    try:
+        spare_parts = SparePartsInventory.query.all()
+        return jsonify([{ 
+            "id": sp.id,  
+            "name": sp.name, 
+            "description": sp.description, 
+            "price": float(sp.price)  # Convertir Decimal a float
+        } for sp in spare_parts])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @spare_parts_bp.route('/spare_parts', methods=['POST'])
 def create_spare_part():
     data = request.json
-    new_spare_part = Spare_parts_inventory(
+    new_spare_part = SparePartsInventory(
         name=data['name'],
         description=data['description'],
         price=data['price']
@@ -31,27 +33,33 @@ def create_spare_part():
 # Método PUT (Actualizar Spare Part)
 @spare_parts_bp.route('/spare_parts/<int:id>', methods=['PUT'])
 def update_spare_part(id):
-    spare_part = Spare_parts_inventory.query.get(id)
-    if not spare_part:
-        return jsonify({"error": "Spare Part not found"}), 404
+    try:
+        spare_part = SparePartsInventory.query.get(id)
+        if not spare_part:
+            return jsonify({"error": "Spare Part not found"}), 404
+        
+        data = request.json
+        spare_part.name = data.get('name', spare_part.name)
+        spare_part.description = data.get('description', spare_part.description)
+        spare_part.price = data.get('price', spare_part.price)
+        
+        db.session.commit()
+        
+        return jsonify({"message": "Spare Part updated successfully"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
     
-    data = request.json
-    spare_part.name = data.get('name', spare_part.name)
-    spare_part.description = data.get('description', spare_part.description)
-    spare_part.price = data.get('price', spare_part.price)
-    
-    db.session.commit()
-    
-    return jsonify({"message": "Spare Part updated successfully"})
-
-# Método DELETE (Eliminar Spare Part)
+# Método DELETE 
 @spare_parts_bp.route('/spare_parts/<int:id>', methods=['DELETE'])
 def delete_spare_part(id):
-    spare_part = Spare_parts_inventory.query.get(id)
-    if not spare_part:
-        return jsonify({"error": "Spare Part not found"}), 404
-    
-    db.session.delete(spare_part)
-    db.session.commit()
-    
-    return jsonify({"message": "Spare Part deleted successfully"})
+    try:
+        spare_part = SparePartsInventory.query.get(id)
+        if not spare_part:
+            return jsonify({"error": "Spare Part not found"}), 404
+        
+        db.session.delete(spare_part)
+        db.session.commit()
+        
+        return jsonify({"message": "Spare Part deleted successfully"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
