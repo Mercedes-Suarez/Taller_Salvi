@@ -24,7 +24,7 @@ export const UserService = {
         try {
             const response = await apiClient.post("/api/users", newUser);
             // Si la respuesta incluye 'Email or password already exists', rechaza la promesa con un mensaje personalizado
-            if (response.data.includes('Email or password already exists')) {
+            if (response.status.includes('Email or password already exists')) {
                 throw new Error('El correo electrónico ya existe.');
             }
             return response;

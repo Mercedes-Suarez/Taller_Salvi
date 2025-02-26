@@ -1,8 +1,8 @@
 import {
-    getsessionTokens,
-    createsessionTokens,
-    updatesessionTokens,
-    deletesessionTokens
+    getSessionTokens,
+    createSessionToken,
+    updateSessionToken,
+    deleteSessionToken
 } from "../services/session_tokensService";
 export const fetchSessionTokens = async (setSessionTokens) => {
     try {

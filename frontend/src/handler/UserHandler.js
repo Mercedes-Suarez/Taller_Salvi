@@ -6,13 +6,13 @@ export const UserHandler = {
         let user = await UserService.getUser();
         return user;
     },
-    async getAlltUsers() {
-        let allUsers = await UserService.getAlltUsers();
+    async getAllUsers() {
+        let allUsers = await UserService.getAllUsers();
         return allUsers;
     },
     async postUser(newUser) {
         return UserService.postUser(newUser).then((response) => {
-            if (response.status === 200) {
+            if (response.status === 201) {
                 console.log(response.data);
             } else {
                 throw new Error('Error al enviar el usuario');

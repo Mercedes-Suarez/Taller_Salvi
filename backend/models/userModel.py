@@ -11,7 +11,7 @@ class User(db.Model):
     user_type_id = db.Column(db.Integer, db.ForeignKey('user_types.id'), nullable=False)
     registration_date = db.Column(db.DateTime, server_default=db.func.now())
 
-    user_type = db.relationship('UserType', backref=db.backref('users', lazy=True))
+    user_type = db.relationship('UserType', backref=db.backref('users', lazy='dynamic'))
 
     def __init__(self, name, email, password, user_type_id):
     
