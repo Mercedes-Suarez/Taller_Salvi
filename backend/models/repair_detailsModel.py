@@ -1,9 +1,11 @@
-from backend import db
+from backend.models import db
+from .repair_ordersModel import Repair_orders
+from .sparePartsInventoryModel import SparePartsInventory
 
-class Repair_details(db.Model):
-    id_order = db.ForeignKey('RepairOrder', on_delete=models.CASCADE)
-    description = db.TextField()
-    id_replacement = db.ForeignKey('SparePartInventory', on_delete=models.CASCADE)
-    amount = db.IntegerField()
-    unit_price = db.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-   
+class Repair_detail(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id_order = db.Column(db.Integer, db.ForeignKey('repair_orders.id'), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    sparePartsInventory_id = db.Column(db.Integer, db.ForeignKey('spare_parts_inventory.id'), nullable=False)
+    amount = db.Column(db.Integer, nullable=False)
+    unit_price = db.Column(db.Numeric(10, 2), nullable=False)

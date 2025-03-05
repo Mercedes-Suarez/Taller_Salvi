@@ -1,4 +1,4 @@
-from backend import db
+from backend.models import db
 
 class Advertisement(db.Model):
     __tablename__ = 'advertisements'

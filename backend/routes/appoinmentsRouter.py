@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from backend import db
+from backend.models import db
 from backend.models.appointmentsModel import Appointment
 
 # Blueprint para Appointments

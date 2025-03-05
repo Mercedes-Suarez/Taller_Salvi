@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from backend import db
+from backend.models import db
 from backend.models.vehicleModel import Vehicle
 
 vehicles_bp = Blueprint('vehicle', __name__)
@@ -18,7 +18,7 @@ def get_vehicles():
 def create_vehicle():
     data = request.json
     new_vehicle = Vehicle(
-        id_client=data['id_client'],
+        client_id=data['id_client'],
         brand=data['brand'],
         model=data['model'],
         year=data['year'],
@@ -36,7 +36,7 @@ def update_vehicle(id_vehicle):
         return jsonify({"error": "Vehicle not found"}), 404
 
     data = request.json
-    vehicle.id_client = data.get('id_client', vehicle.id_client)
+    vehicle.client_id = data.get('client_id', vehicle.client_id)
     vehicle.brand = data.get('brand', vehicle.brand)
     vehicle.model = data.get('model', vehicle.model)
     vehicle.year = data.get('year', vehicle.year)

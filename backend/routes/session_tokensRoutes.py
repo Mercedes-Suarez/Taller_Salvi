@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from backend import db
-from models.sessionTokensModel import SessionToken
+from backend.models import db
+from backend.models.sessionTokensModel import SessionToken
 from datetime import datetime
 
 # Blueprint para Session Tokens

@@ -1,13 +1,13 @@
 from flask import Blueprint, request, jsonify
-from backend import db
-from backend.models.repair_detailsModel import Repair_details
+from backend.models import db
+from backend.models.repair_detailsModel import Repair_detail
 
 repair_details_bp = Blueprint('repair_details', __name__)
 
 # Obtener todos los detalles de reparación
-@repair_details_bp.route('/repair_details', methods=['GET'])
+@repair_details_bp.route('/repair_detail', methods=['GET'])
 def get_repair_details():
-    details = Repair_details.query.all()
+    details = Repair_detail.query.all()
     return jsonify([{
         "id_order": d.id_order,
         "description": d.description,
@@ -19,7 +19,7 @@ def get_repair_details():
 # Obtener un detalle de reparación por ID de orden
 @repair_details_bp.route('/repair_details/<int:id_order>', methods=['GET'])
 def get_repair_detail(id_order):
-    detail = Repair_details.query.get(id_order)
+    detail = Repair_detail.query.get(id_order)
     if not detail:
         return jsonify({"error": "Detail not found"}), 404
     return jsonify({
@@ -34,7 +34,7 @@ def get_repair_detail(id_order):
 @repair_details_bp.route('/repair_details', methods=['POST'])
 def create_repair_detail():
     data = request.json
-    new_detail = Repair_details(
+    new_detail = Repair_detail(
         id_order=data['id_order'],
         description=data['description'],
         id_replacement=data['id_replacement'],
@@ -48,7 +48,7 @@ def create_repair_detail():
 # Eliminar un detalle de reparación
 @repair_details_bp.route('/repair_details/<int:id_order>', methods=['DELETE'])
 def delete_repair_detail(id_order):
-    detail = Repair_details.query.get(id_order)
+    detail = Repair_detail.query.get(id_order)
     if not detail:
         return jsonify({"error": "Detail not found"}), 404
 

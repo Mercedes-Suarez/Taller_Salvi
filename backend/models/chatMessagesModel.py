@@ -1,4 +1,6 @@
-from backend import db
+from backend.models import db
+from .clientModel import Client
+from .employeesModel import Employee
 from datetime import datetime
 
 class ChatMessage(db.Model):

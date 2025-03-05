@@ -1,16 +1,15 @@
-from backend import db
+from backend.models import db
+from .clientModel import Client
+from .vehicleModel import Vehicle
 
 class Repair_orders(db.Model):
-    id_client = db.ForeignKey('Client', on_delete=models.CASCADE)
-    start_date = db.DateTimeField()
-    end_date = db.DateTimeField()
-    status = db.CharField(
-        max_length=15,
-        choices=[('Pendiente', 'Pendiente'), ('En proceso', 'En proceso'), ('Completada', 'Completada'), ('Cancelada', 'Cancelada')]
-    )
-    total = db.DecimalField(max_digits=10, decimal_places=2)
-    id_vehicle = db.ForeignKey('Vehicle', on_delete=models.CASCADE)
-    entry_date = db.DateTimeField()
-    estimated_delivery = db.DateTimeField()
-    estimated_total = db.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    finish_total = db.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    start_date = db.Column(db.DateTime, nullable=False)  
+    client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
+    status = db.Column(db.String(15), nullable=False) 
+    total = db.Column(db.Numeric(10, 2), nullable=False) 
+    vehicle_id = db.Column(db.Integer, db.ForeignKey('vehicle.id'), nullable=False)
+    entry_date = db.Column(db.DateTime, nullable=False) 
+    estimated_delivery = db.Column(db.DateTime, nullable=True)  
+    estimated_total = db.Column(db.Numeric(10, 2), nullable=True) 
+    finish_total = db.Column(db.Numeric(10, 2), nullable=True)

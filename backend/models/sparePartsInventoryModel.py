@@ -1,6 +1,6 @@
-from backend import db
+from backend.models import db
 
-class Sparepartsinventory(db.Model):
+class SparePartsInventory(db.Model):
     __tablename__ = 'spare_parts_inventory'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

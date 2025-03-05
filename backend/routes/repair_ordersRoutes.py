@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from backend import db
+from backend.models import db
 from backend.models.repair_ordersModel import Repair_orders
 
 # Blueprint para Repair Orders

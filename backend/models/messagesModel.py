@@ -1,5 +1,6 @@
-from backend import db
+from backend.models import db
 from datetime import datetime
+from backend.models.userModel import User
 
 class Message(db.Model):
     __tablename__ = 'messages'

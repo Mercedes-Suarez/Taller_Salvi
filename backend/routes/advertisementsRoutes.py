@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from backend import db
+from backend.models import db
 from backend.models.advertisementsModel import Advertisement
 
 advertisements_bp = Blueprint('advertisements', __name__)

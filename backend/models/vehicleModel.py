@@ -1,11 +1,11 @@
-from backend import db
-from backend.models.clientsModel import Client
+from ..models import db
+from backend.models.clientModel import Client
 
 class Vehicle(db.Model):
     __tablename__ = 'vehicle'
 
-    id_vehicle = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    id_client = db.Column(db.Integer, db.ForeignKey('clients.id_client'), nullable=False)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
     brand = db.Column(db.String(50), nullable=False)
     model = db.Column(db.String(50), nullable=False)
     year = db.Column(db.Integer, nullable=False)
@@ -15,7 +15,7 @@ class Vehicle(db.Model):
     client = db.relationship('Client', backref=db.backref('vehicles', lazy=True))
 
     def __init__(self, id_client, brand, model, year, number_frame):
-        self.id_client = id_client
+        self.client_id = id_client
         self.brand = brand
         self.model = model
         self.year = year

@@ -1,4 +1,5 @@
-from backend import db
+from backend.models import db
+from .userModel import User
 from datetime import datetime
 
 class SessionToken(db.Model):

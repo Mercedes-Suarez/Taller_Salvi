@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from backend import db
+from backend.models import db
 from backend.models.userModel import User
 
 user_bp = Blueprint('user', __name__)
@@ -9,7 +9,7 @@ def get_users():
     users = User.query.all()
     return jsonify([{
         "id": u.id,
-        "name": u.name,
+        "username": u.username,
         "email": u.email,
         "user_type_id": u.user_type_id,
         "registration_date": u.registration_date
@@ -19,7 +19,7 @@ def get_users():
 def create_user():
     data = request.json
     new_user = User(
-        name=data['name'],
+        username=data['username'],
         email=data['email'],
         password=data['password'],
         user_type_id=data['user_type_id']
@@ -32,7 +32,7 @@ def create_user():
 def update_user(user_id):
     user = User.query.get_or_404(user_id)
     data = request.json
-    user.name = data.get('name', user.name)
+    user.username = data.get('username', user.username)
     user.email = data.get('email', user.email)
     user.password = data.get('password', user.password)
     user.user_type_id = data.get('user_type_id', user.user_type_id)
