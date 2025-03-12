@@ -1,43 +1,43 @@
 from flask import Blueprint, request, jsonify
 from backend.models import db
-from backend.models.repair_detailsModel import Repair_detail
+from backend.models.repair_detailModel import Repair_detail
 
-repair_details_bp = Blueprint('repair_details', __name__)
+repair_detail_bp = Blueprint('repair_detail', __name__)
 
 # Obtener todos los detalles de reparación
-@repair_details_bp.route('/repair_detail', methods=['GET'])
+@repair_detail_bp.route('/repair_detail', methods=['GET'])
 def get_repair_details():
     details = Repair_detail.query.all()
     return jsonify([{
-        "id_order": d.id_order,
+        "order_id": d.order_id,
         "description": d.description,
-        "id_replacement": d.id_replacement,
+        "sparePartsInventory_id": d.sparePartsInventory_id,
         "amount": d.amount,
         "unit_price": str(d.unit_price)
     } for d in details])
 
 # Obtener un detalle de reparación por ID de orden
-@repair_details_bp.route('/repair_details/<int:id_order>', methods=['GET'])
+@repair_detail_bp.route('/repair_detail/<int:id_order>', methods=['GET'])
 def get_repair_detail(id_order):
     detail = Repair_detail.query.get(id_order)
     if not detail:
         return jsonify({"error": "Detail not found"}), 404
     return jsonify({
-        "id_order": detail.id_order,
+        "order_id": detail.order_id,
         "description": detail.description,
-        "id_replacement": detail.id_replacement,
+        "sparePartsInventory_id": detail.sparePartsInventory_id,
         "amount": detail.amount,
         "unit_price": str(detail.unit_price)
     })
 
 # Crear un nuevo detalle de reparación
-@repair_details_bp.route('/repair_details', methods=['POST'])
+@repair_detail_bp.route('/repair_detail', methods=['POST'])
 def create_repair_detail():
     data = request.json
     new_detail = Repair_detail(
-        id_order=data['id_order'],
+        order_id=data['order_id'],
         description=data['description'],
-        id_replacement=data['id_replacement'],
+        sparePartsInventory_id=data['sparePartsInventory_id'],
         amount=data['amount'],
         unit_price=data['unit_price']
     )
@@ -46,7 +46,7 @@ def create_repair_detail():
     return jsonify({"message": "Repair detail added"}), 201
 
 # Eliminar un detalle de reparación
-@repair_details_bp.route('/repair_details/<int:id_order>', methods=['DELETE'])
+@repair_detail_bp.route('/repair_detail/<int:id_order>', methods=['DELETE'])
 def delete_repair_detail(id_order):
     detail = Repair_detail.query.get(id_order)
     if not detail:

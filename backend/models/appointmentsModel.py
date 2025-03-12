@@ -1,13 +1,16 @@
 from backend.models import db
-from .clientModel import Client
-from .vehicleModel import Vehicle
+from backend.models.clientModel import Client
+from backend.models.vehicleModel import Vehicle
 
 class Appointment(db.Model):
     __tablename__ = 'appointments'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
-    vehicle_id = db.Column(db.Integer, nullable=False)  # Se puede hacer relación con una tabla de vehículos
+    vehicles_id = db.Column(db.Integer, db.ForeignKey('vehicles.id'),nullable=False)  # Se puede hacer relación con una tabla de vehículos
+    vehicles = db.relationship('Vehicle', backref='appointments')
     appointment_date = db.Column(db.DateTime, nullable=False)
     state = db.Column(db.Enum('Pendiente', 'Confirmada', 'Cancelada', 'Realizada'), nullable=False)
-    notes = db.Column(db.Text, nullable=False)
+    notes = db.Column(db.Text, nullable=False) 
+    clients_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
+    client = db.relationship('Client', backref='appointments')
+

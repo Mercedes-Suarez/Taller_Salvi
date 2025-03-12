@@ -9,8 +9,8 @@ clients_bp = Blueprint('clients', __name__)
 def get_clients():
     clients = Client.query.all()
     return jsonify([{ 
-        "id_client": client.id_client,
-        "id_user": client.id_user,
+        "client_id": client.client_id,
+        "users_id": client.users_id,
         "name": client.name,
         "phone": client.phone,
         "email": client.email,
@@ -22,7 +22,7 @@ def get_clients():
 def create_client():
     data = request.json
     new_client = Client(
-        id_user=data['id_user'],
+        users_id=data['users_id'],
         name=data['name'],
         phone=data['phone'],
         email=data['email'],

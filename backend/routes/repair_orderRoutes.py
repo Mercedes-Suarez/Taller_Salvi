@@ -1,16 +1,16 @@
 from flask import Blueprint, request, jsonify
 from backend.models import db
-from backend.models.repair_ordersModel import Repair_orders
+from backend.models.repair_orderModel import Repair_order
 
 # Blueprint para Repair Orders
-repair_orders_bp = Blueprint('repair_orders', __name__)
+repair_order_bp = Blueprint('repair_order', __name__)
 
-@repair_orders_bp.route('/repair_orders', methods=['GET'])
-def get_repair_orders():
-    orders = Repair_orders.query.all()
+@repair_order_bp.route('/repair_order', methods=['GET'])
+def get_repair_order():
+    orders = Repair_order.query.all()
     return jsonify([{ 
-        "id_client": order.id_client,
-        "id_vehicle": order.id_vehicle,
+        "client_id": order.client_id,
+        "vehicle_id": order.vehicle_id,
         "start_date": order.start_date.isoformat(),
         "end_date": order.end_date.isoformat() if order.end_date else None,
         "status": order.status,
@@ -21,12 +21,12 @@ def get_repair_orders():
         "finish_total": str(order.finish_total) if order.finish_total else None
     } for order in orders])
 
-@repair_orders_bp.route('/repair_orders', methods=['POST'])
+@repair_order_bp.route('/repair_order', methods=['POST'])
 def create_repair_order():
     data = request.json
-    new_order = Repair_orders(
-        id_client=data['id_client'],
-        id_vehicle=data['id_vehicle'],
+    new_order = Repair_order(
+        client_id=data['client_id'],
+        vehicle_id=data['vehicle_id'],
         start_date=data['start_date'],
         end_date=data.get('end_date'),
         status=data['status'],
@@ -40,9 +40,9 @@ def create_repair_order():
     db.session.commit()
     return jsonify({"message": "Repair Order added"}), 201
 
-@repair_orders_bp.route('/repair_orders/<int:id_client>', methods=['PUT'])
+@repair_order_bp.route('/repair_order/<int:id_client>', methods=['PUT'])
 def update_repair_order(id_client):
-    order = Repair_orders.query.filter_by(id_client=id_client).first()
+    order = Repair_order.query.filter_by(id_client=id_client).first()
     if not order:
         return jsonify({"error": "Repair Order not found"}), 404
     
@@ -56,9 +56,9 @@ def update_repair_order(id_client):
     db.session.commit()
     return jsonify({"message": "Repair Order updated successfully"})
 
-@repair_orders_bp.route('/repair_orders/<int:id_client>', methods=['DELETE'])
+@repair_order_bp.route('/repair_order/<int:id_client>', methods=['DELETE'])
 def delete_repair_order(id_client):
-    order = Repair_orders.query.filter_by(id_client=id_client).first()
+    order = Repair_order.query.filter_by(id_client=id_client).first()
     if not order:
         return jsonify({"error": "Repair Order not found"}), 404
     

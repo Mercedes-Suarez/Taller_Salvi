@@ -10,7 +10,7 @@ user_type_bp = Blueprint('user_type', __name__)
 def get_user_types():
     
     user_types = UserType.query.all()
-    return jsonify([{ "id_user_type": ut.id_user_type, "user_type_name": ut.user_type_name } for ut in user_types])
+    return jsonify([{ "id": ut.id, "user_type_name": ut.user_type_name } for ut in user_types])
 
 @user_type_bp.route('/user_type', methods=['POST'])
 def create_user_type():
