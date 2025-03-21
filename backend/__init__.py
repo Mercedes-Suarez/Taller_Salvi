@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 from backend.config import config
 
+
 from backend.models import db
 
 migrate = Migrate()
@@ -33,7 +34,7 @@ def create_app():
     from backend.routes.employeesRoutes import employees_bp
     from backend.routes.clientsRoutes import clients_bp
     from backend.routes.vehiclesRoutes import vehicles_bp
-    from backend.routes.appoinmentsRouter import appointments_bp
+    from backend.routes.appointmentsRoutes import appointments_bp
     from backend.routes.repair_orderRoutes import repair_order_bp
     from backend.routes.repair_detailRoutes import repair_detail_bp
     from backend.routes.invoicesRoutes import invoices_bp

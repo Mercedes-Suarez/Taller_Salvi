@@ -1,57 +1,62 @@
 from flask import Blueprint, request, jsonify
-from backend.models import db
-from backend.models.vehicleModel import Vehicle
+from backend.services.vehiclesServices import (
+    get_all_vehicles, get_vehicle_by_id, create_vehicle as create_vehicle_service,
+    update_vehicle as update_vehicle_service, delete_vehicle as delete_vehicle_service
+)
 
 vehicles_bp = Blueprint('vehicle', __name__)
 
 @vehicles_bp.route('/vehicles', methods=['GET'])
 def get_vehicles():
-    vehicles = Vehicle.query.all()
-    return jsonify([{
-        "vehicle_id": v.vehicle_id,
-        "brand": v.brand,
-        "model": v.model,
-        "year": v.year
+    try:
+        vehicles = get_all_vehicles()
+        return jsonify([{
+           "vehicle_id": v.vehicle_id,
+           "client_id": v.client_id,
+           "brand": v.brand,
+           "model": v.model,
+           "year": v.year,
+            "number_frame": v.number_frame
     } for v in vehicles])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @vehicles_bp.route('/vehicles', methods=['POST'])
-def create_vehicle():
-    data = request.json
-    new_vehicle = Vehicle(
-        client_id=data['client_id'],
-        brand=data['brand'],
-        model=data['model'],
-        year=data['year'],
-        number_frame=data['number_frame']
-    )
-    db.session.add(new_vehicle)
-    db.session.commit()
-    return jsonify({"message": "Vehicle added"}), 201
+def create_vehicle_route():
+    try:
+        data = request.json
+        new_vehicle = create_vehicle_service(data)
+        return jsonify({
+            "message": "Vehicle created successfully",
+            "vehicle_id": new_vehicle.vehicle_id
+        }), 201
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500       
+
 
 # Actualizar un vehículo
 @vehicles_bp.route('/vehicles/<int:id>', methods=['PUT'])
-def update_vehicle(id):
-    vehicle = Vehicle.query.get(id)
-    if not vehicle:
-        return jsonify({"error": "Vehicle not found"}), 404
+def update_vehicle_route(id):
+    try:
+        data = request.json
+        updated_vehicle = update_vehicle_service(id, data)
+        if not updated_vehicle:
+            return jsonify({"error": "Vehicle not found"}), 404
 
-    data = request.json
-    vehicle.client_id = data.get('client_id', vehicle.client_id)
-    vehicle.brand = data.get('brand', vehicle.brand)
-    vehicle.model = data.get('model', vehicle.model)
-    vehicle.year = data.get('year', vehicle.year)
-    vehicle.number_frame = data.get('number_frame', vehicle.number_frame)
-
-    db.session.commit()
-    return jsonify({"message": "Vehicle updated successfully"})
-
+        return jsonify({"message": "Vehicle updated successfully"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
 # Eliminar un vehículo
 @vehicles_bp.route('/vehicles/<int:id>', methods=['DELETE'])
-def delete_vehicle(id):
-    vehicle = Vehicle.query.get(id)
-    if not vehicle:
-        return jsonify({"error": "Vehicle not found"}), 404
+def delete_vehicle_route(id):
+    try:
+        deleted_vehicle = delete_vehicle_service(id)
+        if not deleted_vehicle:
+            return jsonify({"error": "Vehicle not found"}), 404
 
-    db.session.delete(vehicle)
-    db.session.commit()
-    return jsonify({"message": "Vehicle deleted successfully"}) 
+        return jsonify({"message": "Vehicle deleted successfully"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

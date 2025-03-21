@@ -1,14 +1,19 @@
 from flask import Blueprint, request, jsonify
-from backend.models import db
-from backend.models.employeesModel import Employee
+from backend.services.employeesServices import (
+    get_employees_all, get_employee_by_id,
+    create_employee as create_employee_service,
+    update_employee as update_employee_service,
+    delete_employee as delete_employee_service
+)
 
-# Blueprint para Employees
 employees_bp = Blueprint('employees', __name__)
 
 @employees_bp.route('/employees', methods=['GET'])
 def get_employees():
-    employees = Employee.query.all()
-    return jsonify([{ 
+    try:
+
+      employees = get_employees_all()
+      return jsonify([{ 
         "id_employee": emp.id_employee,
         "id_user": emp.id_user,
         "name": emp.name,
@@ -16,47 +21,66 @@ def get_employees():
         "email": emp.email,
         "address": emp.address,
         "post": emp.post,
-        "date_start": emp.date_start.isoformat()
-    } for emp in employees])
+        "date_start": emp.date_start.isoformat() if emp.date_start else None
+        } for emp in employees])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@employees_bp.route('/employees/<int:employee_id>', methods=['GET'])
+def get_employee(employee_id):
+    """Obtiene un empleado por su ID."""
+    try:
+        employee = get_employee_by_id(employee_id)
+        if not employee:
+            return jsonify({"error": "Employee not found"}), 404
+        
+        return jsonify({
+            "id_employee": employee.id_employee,
+            "id_user": employee.id_user,
+            "name": employee.name,
+            "phone": employee.phone,
+            "email": employee.email,
+            "address": employee.address,
+            "post": employee.post,
+            "date_start": employee.date_start.isoformat() if employee.date_start else None
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 @employees_bp.route('/employees', methods=['POST'])
 def create_employee():
-    data = request.json
-    new_employee = Employee(
-        id_user=data['id_user'],
-        name=data['name'],
-        phone=data['phone'],
-        email=data['email'],
-        address=data['address'],
-        post=data['post'],
-        date_start=data['date_start']
-    )
-    db.session.add(new_employee)
-    db.session.commit()
-    return jsonify({"message": "Employee added"}), 201
+    try:
+        data = request.json
+        new_employee = create_employee_service(data)
+        return jsonify({"message": "Employee added", "id_employee": new_employee.id_employee}), 201
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-@employees_bp.route('/employees/<int:id>', methods=['PUT'])
-def update_employee(id):
-    employee = Employee.query.get(id)
-    if not employee:
-        return jsonify({"error": "Employee not found"}), 404
-    
-    data = request.json
-    employee.name = data.get('name', employee.name)
-    employee.phone = data.get('phone', employee.phone)
-    employee.email = data.get('email', employee.email)
-    employee.address = data.get('address', employee.address)
-    employee.post = data.get('post', employee.post)
-    
-    db.session.commit()
-    return jsonify({"message": "Employee updated successfully"})
 
-@employees_bp.route('/employees/<int:id>', methods=['DELETE'])
-def delete_employee(id):
-    employee = Employee.query.get(id)
-    if not employee:
-        return jsonify({"error": "Employee not found"}), 404
-    
-    db.session.delete(employee)
-    db.session.commit()
-    return jsonify({"message": "Employee deleted successfully"})
+@employees_bp.route('/employees/<int:employee_id>', methods=['PUT'])
+def update_employee(employee_id):
+    try:
+        data = request.json
+        updated_employee = update_employee_service(employee_id, data)
+        if not updated_employee:
+            return jsonify({"error": "Employee not found"}), 404
+        
+        return jsonify({"message": "Employee updated successfully"})
+    except ValueError as ve:
+        return jsonify({"error": str(ve)}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@employees_bp.route('/employees/<int:employee_id>', methods=['DELETE'])
+def delete_employee(employee_id):
+    try:
+        deleted_employee = delete_employee_service(employee_id)
+        if not deleted_employee:
+            return jsonify({"error": "Employee not found"}), 404
+        
+        return jsonify({"message": "Employee deleted successfully"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

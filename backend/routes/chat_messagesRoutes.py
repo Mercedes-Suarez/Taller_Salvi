@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from backend.services.chat_messagesServices import get_all_cmsg, get_cmsg_by_id, create_cmsg, update_cmsg , delete_cmsg
 from backend.models import db
 from backend.models.chatMessagesModel import ChatMessage
 from datetime import datetime
@@ -8,62 +9,74 @@ chat_messages_bp = Blueprint('chat_messages', __name__)
 @chat_messages_bp.route('/chat_messages', methods=['GET'])
 def get_chat_messages():
     try:
-        messages = ChatMessage.query.all()
-        return jsonify([
-            {
-                "id": msg.id,
-                "client_id": msg.client_id,
-                "employee_id": msg.employee_id,
-                "message_text": msg.message_text,
-                "sent_date": msg.sent_date.isoformat() if msg.sent_date else None,
-                "ready": msg.ready
-            } for msg in messages
-        ])
+        msges = get_all_cmsg()
+        return jsonify([{
+                "id": cmsg.id,
+                "clients_id": cmsg.clients_id,
+                "employees_id": cmsg.employees_id,
+                "message_text": cmsg.message_text,
+                "sent_date": cmsg.sent_date.isoformat() if cmsg.sent_date else None,
+                "ready": cmsg.ready
+            } for cmsg in msges])
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@chat_messages_bp.route('/chat_messages/<int:id>', methods=['GET'])
+def get_chat_messages_by_id(id):
+    try:
+        cmsg = get_cmsg_by_id(id)
+        return jsonify(
+            {
+                "id": cmsg.id,
+                "clients_id": cmsg.clients_id,
+                "employees_id": cmsg.employees_id,
+                "message_text": cmsg.message_text,
+                "sent_date": cmsg.sent_date.isoformat() if cmsg.sent_date else None,
+                "ready": cmsg.ready
+            }
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 404
 
 @chat_messages_bp.route('/chat_messages', methods=['POST'])
 def create_chat_message():
     try:
         data = request.json
-        sent_date = data.get('sent_date')  # Obtener sent_date del JSON
-
-        if sent_date:
-            sent_date = datetime.fromisoformat(sent_date)  # Convertir a datetime si está presente
-        else:
-            sent_date = datetime.utcnow()  # Usar la fecha y hora actual si no está en el JSON
-
-        new_message = ChatMessage(
-            client_id=data['client_id'],
-            employee_id=data['employee_id'],
-            message_text=data['message_text'],
-            sent_date=sent_date,  # Ahora está correctamente asignado
-            ready=data.get('ready', False)
-        )
-        db.session.add(new_message)
-        db.session.commit()
-        return jsonify({"message": "Chat message added"}), 201
+        new_cmsg = create_cmsg(data)
+        return jsonify({
+            "id": new_cmsg.id,
+            "clients_id": new_cmsg.clients_id,
+            "employees_id": new_cmsg.employees_id,
+            "message_text": new_cmsg.message_text,
+            "sent_date": new_cmsg.sent_date.isoformat() if new_cmsg.sent_date else None,
+            "ready": new_cmsg.ready
+        }), 201
+    
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @chat_messages_bp.route('/chat_messages/<int:id>', methods=['PUT'])
 def update_chat_message(id):
     try:
-        message = ChatMessage.query.get_or_404(id)
         data = request.json
-        message.message_text = data.get('message_text', message.message_text)
-        message.ready = data.get('ready', message.ready)
-        db.session.commit()
-        return jsonify({"message": "Chat message updated"})
+        updated_cmsg = update_cmsg(id,data)
+        return jsonify({
+            "id": updated_cmsg.id,
+            "clients_id": updated_cmsg.clients_id,
+            "employees_id": updated_cmsg.employees_id,
+            "message_text": updated_cmsg.message_text,
+            "sent_date": updated_cmsg.sent_date.isoformat() if updated_cmsg.sent_date else None,
+            "ready": updated_cmsg.ready
+        })
+    except ValueError as ve:
+        return jsonify({"error":str(ve)}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 @chat_messages_bp.route('/chat_messages/<int:id>', methods=['DELETE'])
 def delete_chat_message(id):
     try:
-        message = ChatMessage.query.get_or_404(id)
-        db.session.delete(message)
-        db.session.commit()
+        delete_cmsg(id)
         return jsonify({"message": "Chat message deleted"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500

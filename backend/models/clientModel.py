@@ -11,8 +11,10 @@ class Client(db.Model):
         return User.query.get(self.user_id)
     
     user = db.relationship('Users', backref=db.backref('clients', lazy=True))
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(255), nullable=False)
     phone = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(100), nullable=False)
     address = db.Column(db.Text, nullable=False)
     register_date = db.Column(db.DateTime, nullable=False)
+
+    chat_messages = db.relationship('ChatMessage', back_populates='client', cascade="all, delete-orphan")

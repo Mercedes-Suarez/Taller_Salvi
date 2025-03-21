@@ -1,48 +1,70 @@
 from flask import Blueprint, request, jsonify
-from backend.models import db
-from backend.models.usersModel import User
+from backend.services.usersServices import (
+    get_all_users, get_user_by_id, create_user, update_user, delete_user
+)
 
 users_bp = Blueprint('users', __name__)
 
 @users_bp.route('/users', methods=['GET'])
 def get_users():
-    users = User.query.all()
-    return jsonify([{
+    try:
+
+        users = get_all_users()
+        return jsonify([{
         "id": u.id,
         "username": u.username,
         "email": u.email,
         "user_type_id": u.user_type_id,
         "registration_date": u.registration_date
     } for u in users])
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@users_bp.route('/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    try:
+        user = get_user_by_id(user_id)
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        return jsonify({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "user_type_id": user.user_type_id,
+            "registration_date": user.registration_date
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500    
 
 @users_bp.route('/users', methods=['POST'])
 def create_user():
-    data = request.json
-    from werkzeug.security import generate_password_hash
-    new_user = User(
-        username=data['username'],
-        email=data['email'],
-        password=generate_password_hash(data['password']),
-        user_type_id=data['user_type_id']
-    )
-    db.session.add(new_user)
-    db.session.commit()
-    return jsonify({"message": "User added"}), 201
+    try:
+        data = request.json
+        new_user = create_user(data)
+        return jsonify({"message": "User added", "id": new_user.id}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @users_bp.route('/users/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
-    user = User.query.get_or_404(user_id)
-    data = request.json
-    user.username = data.get('username', user.username)
-    user.email = data.get('email', user.email)
-    user.password = data.get('password', user.password)
-    user.user_type_id = data.get('user_type_id', user.user_type_id)
-    db.session.commit()
-    return jsonify({"message": "User updated"})
+    try:
+        data = request.json
+        updated_user = update_user(user_id, data)
+        if not updated_user:
+            return jsonify({"error": "User not found"}), 404
+
+        return jsonify({"message": "User updated successfully"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @users_bp.route('/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
-    user = User.query.get_or_404(user_id)
-    db.session.delete(user)
-    db.session.commit()
-    return jsonify({"message": "User deleted"})
+    try:
+        deleted_user = delete_user(user_id)
+        if not deleted_user:
+            return jsonify({"error": "User not found"}), 404
+
+        return jsonify({"message": "User deleted successfully"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

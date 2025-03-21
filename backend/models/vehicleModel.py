@@ -13,7 +13,7 @@ class Vehicle(db.Model):
 
     # Relación con Users (Clientes)
     clients = db.relationship('Client', backref=db.backref('vehicles', lazy=True))
-    appointments = db.relationship('Appointment', backref='vehicle', lazy=True)
+    appointments = db.relationship('Appointment', backref='vehicles', lazy=True)
 
     def __init__(self, client_id, brand, model, year, number_frame):
         self.client_id = client_id
